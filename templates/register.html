@@ -12,11 +12,11 @@ body {
 }
 .rectangle{
 	width:600px;
-	height:500px;
+	height:550px;
 	padding:50px;
 	background: #BAE6FF;
 	margin-left: 350px;
-	margin-top: 150px;
+	margin-top: 100px;
 	border-radius: 40px;
 }
 
@@ -33,19 +33,27 @@ h1{
 }
 h2{
 width: 100%;
-  padding: 12px 20px;
+  padding: 6px 20px;
   margin: 8px 0;
   display: block;
   box-sizing: border-box;
   font-size: 30px
 }
 
-input[type=username],input[type=password]{
+input[type=username],input[type=password],input[type=email],select{
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
   display: block;
   box-sizing: border-box;
+
+}
+select{
+  width: 70%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  display: inline-block;
 
 }
 .button1{
@@ -59,7 +67,9 @@ input[type=username],input[type=password]{
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
+  display: inline-block;
 }
+
 
 </style>
 </head>
@@ -68,12 +78,20 @@ input[type=username],input[type=password]{
 
 <body>
 <div class="rectangle">
+	<h2><center>EMAIL</center></h2>
+	<input type="email" placeholder="Enter Email" name="email" required>
 	<h2><center>USERNAME</center></h2>
 	<input type="username" placeholder="Enter Username" name="uname" required>
 	<h2><center>PASSWORD</center></h2>
 	<input type="password" placeholder="Enter Password" name="psw" required>
-	<button class="button1">Create Account</button>
-	<button class="button1">Forgot Password</button>
+	<h2><center>RE-ENTER PASSWORD</center></h2>
+	<input type="password" placeholder="Re-enter Password" name="rpsw" required>
+	<h2><center>USER TYPE</center></h2>
+	<select name="user type" id="type">
+    <option value="Admin/Lecturer">Admin/Lecturer</option>
+    <option value="Student">Student</option>
+	</select>
+	<button class="button1">Sign Up</button>
 
 </div>
 
