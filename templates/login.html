@@ -68,10 +68,13 @@ input[type=username],input[type=password]{
 
 <body>
 <div class="rectangle">
-	<h2><center>USERNAME</center></h2>
-	<input type="username" placeholder="Enter Username" name="uname" required>
-	<h2><center>PASSWORD</center></h2>
-	<input type="password" placeholder="Enter Password" name="psw" required>
+	<form action="/" method="POST" autocomplete="off">
+		<h2><center>USERNAME</center></h2>
+		<input type="username" placeholder="Enter Username" name="uname" required>
+		<h2><center>PASSWORD</center></h2>
+		<input type="password" placeholder="Enter Password" name="psw" required>
+		<input type="submit" name="submit">
+	</form>
 	<button class="button1">Create Account</button>
 	<button class="button1">Forgot Password</button>
 
