@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  margin: 0;
+  font-family: "Lato", sans-serif;
+}
+
+.sidebar1 {
+  margin: 0;
+  width: 200px;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+  display: inline-block;
+  white-space: normal;
+  border-radius: 37px;
+  background: #BAE6FF;
+}
+.sidebar2 {
+  margin-top:85px;
+  width: 200px;
+  position: fixed;
+  height: 90%;
+  overflow: auto;
+  display: inline-block;
+  white-space: normal;
+  border-radius: 37px;
+  background: #AA83FD;
+  margin-left: 200px
+}
+.sidebar1 a,.sidebar2 a {
+  display: block;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+}
+
+.sidebar1 a.active, .sidebar2 a.active{
+  background-color:white;
+  color: black;
+}
+
+.sidebar1 a:hover:not(.active) {
+  background: #9FDAFB;
+  color:black;
+}
+.sidebar2 a:hover:not(.active) {
+  background: #9A79E2;
+  color:black;
+}
+div.content {
+  margin-left: 400px;
+  padding: 1px 16px;
+  height: 1000px;
+}
+
+@media screen and (max-width: 700px) {
+  .sidebar1,.sidebar2 {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar1 a {float: left;}
+  .sidebar2 a {float: left;}
+  div.content {margin-left: 0;}
+}
+
+@media screen and (max-width: 400px) {
+  .sidebar1 a,.sidebar2 a {
+    text-align: center;
+    float: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar1">
+  <p><center>Main menu</center></p>
+  <a href="{{ url_for('statistic')}}">Student Engagement</a>
+  <a href="{{ url_for('permission')}}">Permission Management</a>
+  <a href="{{ url_for('account')}}">Account</a>
+  <a href="{{ url_for('logout')}}">Log Out</a>
+</div>
+<div class="sidebar2">
+  <p><center>Main menu</center></p>
+  {% for student in students %}
+        <a href="{{ url_for('statistic',username=student.username)}}">{{ student.username }}</a>
+    {% endfor %}
+</div>
+
+<div class="content">
+</div>
+
+</body>
+</html>
