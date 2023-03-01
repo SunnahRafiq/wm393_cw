@@ -87,12 +87,14 @@ div.content {
 </div>
 <div class="sidebar2">
   <p><center>Main menu</center></p>
-  <a href="#news">News</a>
-  <a href="#contact">Contact</a>
-  <a href="#about">About</a>
+  {% for student in students %}
+        <a href="{{ url_for('stat_detail',username=student.username)}}">{{ student.username }}</a>
+    {% endfor %}
 </div>
 
 <div class="content">
+
+
 </div>
 
 </body>

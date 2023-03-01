@@ -1,7 +1,7 @@
-from flask import Flask, render_template,request
+from flask import Flask, render_template, request
 import sqlite3
-
-import users
+from users import Users
+from mystat import Statistic
 
 app = Flask(__name__)
 
@@ -31,8 +31,17 @@ def landing():
   return render_template('landing.html')
 @app.route('/statistic')
 def statistic():
-    students=users.get_students()
+    students=Users.get_students()
     return render_template('statistic.html',students=students)
+
+@app.route('/statistic/<username>')
+def stat_detail(username):
+    attendance, quiz_submissions, tutor_engagement = Statistic.get_statistic(username)
+    user = Users(username, None, 'student')
+    user.attendance = attendance
+    user.quiz_submissions = quiz_submissions
+    user.tutor_engagement = tutor_engagement
+    return render_template('stat_detail.html', user=user)
 @app.route('/permission')
 def permission():
   return render_template('permission.html')
