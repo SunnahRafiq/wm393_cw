@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 import sqlite3
 from users import Users
 from mystat import Statistic
@@ -23,16 +23,23 @@ def login():
             return render_template('landing.html')
     return render_template('login.html')
 
+
+
 @app.route("/register")
 def register():
   return render_template('register.html')
+
+
 @app.route('/landing')
 def landing():
   return render_template('landing.html')
+
+
 @app.route('/statistic')
 def statistic():
     students=Users.get_students()
     return render_template('statistic.html',students=students)
+
 
 @app.route('/statistic/<username>')
 def stat_detail(username):
@@ -42,15 +49,33 @@ def stat_detail(username):
     user.quiz_submissions = quiz_submissions
     user.tutor_engagement = tutor_engagement
     return render_template('stat_detail.html', user=user)
-@app.route('/permission')
-def permission():
-  return render_template('permission.html')
+
+
+@app.route('/permission', methods=['GET', 'POST'])
+@app.route('/permission/<username>', methods=['GET', 'POST'])
+def permission(username=None):
+    if request.method == 'POST':
+        flash('Permissions updated successfully', 'success')
+        return redirect(url_for('permission'))
+
+    users = Users.get_students()
+    return render_template('permission.html', users=users, username=username)
+
+@app.route('/update_permission/<username>', methods=['POST'])
+def update_permission(username):
+    return redirect(url_for('permission', username=username))
+
+
 @app.route('/account')
 def account():
   return render_template('account.html')
+
+
 @app.route('/logout')
 def logout():
   return render_template('logout.html')
+
+
 if __name__ == "__main__":
   app.run(debug=True)
 
