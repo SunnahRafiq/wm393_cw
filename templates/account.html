@@ -98,7 +98,39 @@ div.content {
 </div>
 
 <div class="content">
-</div>
+		<h2>Account Information</h2>
+		<form method="post">
+			<div>
+				<label for="username">Username:</label>
+				<input type="text" id="username" name="username" value="{{ current_user.username }}" readonly>
+			</div>
+			{% if current_user.has_permission('manage_users') %}
+			<div>
+				<label for="name">Name:</label>
+				<input type="text" id="name" name="name" value="{{ current_user.name }}">
+			</div>
+			<div>
+				<label for="modules">Modules:</label>
+				<input type="text" id="modules" name="modules" value="{{ current_user.modules }}">
+			</div>
+			<div>
+				<label for="degree">Degree:</label>
+				<input type="text" id="degree" name="degree" value="{{ current_user.degree }}">
+			</div>
+			{% endif %}
+			{% if current_user and current_user.has_permission('Manage Users') %}
+			<div>
+				<label for="access">Page Access:</label>
+				<select id="access" name="access">
+					<option value="public" {% if current_user.page_access == 'public' %}selected{% endif %}>Public</option>
+					<option value="private" {% if current_user.page_access == 'private' %}selected{% endif %}>Private</option>
+					<option value="restricted" {% if current_user.page_access == 'restricted' %}selected{% endif %}>Restricted</option>
+				</select>
+			</div>
+			{% endif %}
+			<button type="submit">Update</button>
+		</form>
+	</div>
 
 </body>
 </html>

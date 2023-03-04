@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session,g
 import sqlite3
 from users import Users
 from mystat import Statistic
+from admin import Admin
 
 app = Flask(__name__)
-
+app.secret_key = 'secret'
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -20,62 +21,80 @@ def login():
         if len(results)==0:
             print('SORRY INCORRECT CREDENTIALS TRY AGAIN')
         else:
-            return render_template('landing.html')
+            session['username'] = name  # Store the username in the session object
+            return redirect(url_for('landing'))
     return render_template('login.html')
-
 
 
 @app.route("/register")
 def register():
-  return render_template('register.html')
+    return render_template('register.html')
 
 
 @app.route('/landing')
 def landing():
-  return render_template('landing.html')
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template('landing.html')
 
 
 @app.route('/statistic')
-def statistic():
-    students=Users.get_students()
-    return render_template('statistic.html',students=students)
-
-
 @app.route('/statistic/<username>')
-def stat_detail(username):
+def statistic(username=None):
+    if username is None:
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        username = session['username']
+    students = Users.get_user()
     attendance, quiz_submissions, tutor_engagement = Statistic.get_statistic(username)
-    user = Users(username, None, 'student')
+    user = Users(username, None, 'student', None, None)
     user.attendance = attendance
     user.quiz_submissions = quiz_submissions
     user.tutor_engagement = tutor_engagement
-    return render_template('stat_detail.html', user=user)
-
-
-@app.route('/permission', methods=['GET', 'POST'])
-@app.route('/permission/<username>', methods=['GET', 'POST'])
-def permission(username=None):
-    if request.method == 'POST':
-        flash('Permissions updated successfully', 'success')
-        return redirect(url_for('permission'))
-
-    users = Users.get_students()
-    return render_template('permission.html', users=users, username=username)
-
-@app.route('/update_permission/<username>', methods=['POST'])
-def update_permission(username):
-    return redirect(url_for('permission', username=username))
+    return render_template('statistic.html', students=students, user=user)
 
 
 @app.route('/account')
 def account():
-  return render_template('account.html')
+    return render_template('account.html')
 
 
 @app.route('/logout')
 def logout():
-  return render_template('logout.html')
+    session.pop('username', None)
+    return redirect(url_for('login'))
+
+
+@app.route('/admin', methods=['POST', 'GET'])
+def admin():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    admin = Admin()
+
+    if request.method == 'POST':
+        if request.form.get('delete'):
+            username = request.form.get('username')
+            admin.delete_user(username)
+            flash('User profile deleted successfully!')
+        elif request.form.get('update'):
+            username = request.form.get('username')
+            attendance = request.form.get('attendance')
+            sdlc_quiz_pct = request.form.get('sdlc_quiz_pct')
+            applied_maths_quiz_pct = request.form.get('applied_maths_quiz_pct')
+            iot_quiz_pct = request.form.get('iot_quiz_pct')
+            ssd_quiz_pct = request.form.get('ssd_quiz_pct')
+            sdlc_tutor_score = request.form.get('sdlc_tutor_score')
+            applied_maths_tutor_score = request.form.get('applied_maths_tutor_score')
+            ssd_tutor_score = request.form.get('ssd_tutor_score')
+            iot_tutor_score = request.form.get('iot_tutor_score')
+            flash(admin.update_statistics(username, attendance, sdlc_quiz_pct, applied_maths_quiz_pct, ssd_quiz_pct,
+                                          iot_quiz_pct, sdlc_tutor_score, applied_maths_tutor_score, ssd_tutor_score,
+                                          iot_tutor_score))
+
+    return render_template('admin.html')
+
 
 
 if __name__ == "__main__":
-  app.run(debug=True)
-
+    app.run(debug=True)
