@@ -4,9 +4,64 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body {
-  margin: 0;
-  font-family: "Lato", sans-serif;
+	font-family: "Lucida Console", "Courier New", monospace;
+	font-style: normal;
+	font-weight: 400;
+	background: #FFFFFF;
 }
+
+
+h1{
+  width: 100%;
+  padding: 6px 20px;
+  margin: 8px 0;
+  display: block;
+  box-sizing: border-box;
+  font-size: 30px
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+   font-size: 20px
+
+}
+
+select{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: block;
+  box-sizing: border-box;
+
+}
+.button1{
+  background-color:#BAE6FF;
+  border: none;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  color: black;
+  border: 2px solid #008CBA;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+
+
+div.content {
+  margin-left: 400px;
+  padding: 1px 16px;
+  height: 1000px;
+}
+
 
 .sidebar1 {
   margin: 0;
@@ -51,11 +106,6 @@ body {
   background: #9A79E2;
   color:black;
 }
-div.content {
-  margin-left: 400px;
-  padding: 1px 16px;
-  height: 1000px;
-}
 
 @media screen and (max-width: 700px) {
   .sidebar1,.sidebar2 {
@@ -83,54 +133,42 @@ div.content {
   <a href="{{ url_for('statistic')}}">Student Engagement</a>
   <a href="{{ url_for('permission')}}">Permission Management</a>
   <a href="{{ url_for('account')}}">Account</a>
+  <a href="{{ url_for('admin')}}">Admin</a>
+  <a href="{{ url_for('landing')}}">Landing</a>
   <a href="{{ url_for('logout')}}">Log Out</a>
 </div>
 <div class="sidebar2">
-  <form id="form" role="search">
-    <input type="search" id="query" name="q"
-     placeholder="Search..."
-     aria-label="Search through site content">
-  <button>Search</button>
-  </form>
-  <a href="#news">News</a>
-  <a href="#contact">Contact</a>
-  <a href="#about">About</a>
+  <p><center>Main menu</center></p>
+  {% for user in users %}
+        <a href="{{ url_for('account', username=user[0]) }}">{{ user[0] }}</a>
+    {% endfor %}
 </div>
 
 <div class="content">
-		<h2>Account Information</h2>
-		<form method="post">
-			<div>
-				<label for="username">Username:</label>
-				<input type="text" id="username" name="username" value="{{ current_user.username }}" readonly>
-			</div>
-			{% if current_user.has_permission('manage_users') %}
-			<div>
-				<label for="name">Name:</label>
-				<input type="text" id="name" name="name" value="{{ current_user.name }}">
-			</div>
-			<div>
-				<label for="modules">Modules:</label>
-				<input type="text" id="modules" name="modules" value="{{ current_user.modules }}">
-			</div>
-			<div>
-				<label for="degree">Degree:</label>
-				<input type="text" id="degree" name="degree" value="{{ current_user.degree }}">
-			</div>
-			{% endif %}
-			{% if current_user and current_user.has_permission('Manage Users') %}
-			<div>
-				<label for="access">Page Access:</label>
-				<select id="access" name="access">
-					<option value="public" {% if current_user.page_access == 'public' %}selected{% endif %}>Public</option>
-					<option value="private" {% if current_user.page_access == 'private' %}selected{% endif %}>Private</option>
-					<option value="restricted" {% if current_user.page_access == 'restricted' %}selected{% endif %}>Restricted</option>
-				</select>
-			</div>
-			{% endif %}
-			<button type="submit">Update</button>
-		</form>
-	</div>
+  <h1>Account Information</h1>
+  <table>
+    <tr>
+      <th>Username:</th>
+      <td>{{ user[0] }}</td>
+    </tr>
+    <tr>
+      <th>Password:</th>
+      <td>{{ user[1] }}</td>
+    </tr>
+    <tr>
+      <th>User Type:</th>
+      <td>{{ user[2] }}</td>
+    </tr>
+    <tr>
+      <th>Degree:</th>
+      <td>{{ user[3] }}</td>
+    </tr>
+    <tr>
+      <th>Name:</th>
+      <td>{{ user[4] }}</td>
+    </tr>
+  </table>
+</div>
 
 </body>
 </html>

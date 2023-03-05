@@ -4,8 +4,54 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body {
-  margin: 0;
-  font-family: "Lato", sans-serif;
+	font-family: "Lucida Console", "Courier New", monospace;
+	font-style: normal;
+	font-weight: 400;
+	background: #FFFFFF;
+}
+
+
+h1{
+  width: 100%;
+  padding: 6px 20px;
+  margin: 8px 0;
+  display: block;
+  box-sizing: border-box;
+  font-size: 30px
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+   font-size: 20px
+
+}
+
+select{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: block;
+  box-sizing: border-box;
+
+}
+.button1{
+  background-color:#BAE6FF;
+  border: none;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  color: black;
+  border: 2px solid #008CBA;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  display: inline-block;
 }
 
 .sidebar1 {
@@ -19,26 +65,15 @@ body {
   border-radius: 37px;
   background: #BAE6FF;
 }
-.sidebar2 {
-  margin-top:85px;
-  width: 200px;
-  position: fixed;
-  height: 90%;
-  overflow: auto;
-  display: inline-block;
-  white-space: normal;
-  border-radius: 37px;
-  background: #AA83FD;
-  margin-left: 200px
-}
-.sidebar1 a,.sidebar2 a {
+
+.sidebar1 a {
   display: block;
   color: black;
   padding: 16px;
   text-decoration: none;
 }
 
-.sidebar1 a.active, .sidebar2 a.active{
+.sidebar1 a.active{
   background-color:white;
   color: black;
 }
@@ -47,29 +82,25 @@ body {
   background: #9FDAFB;
   color:black;
 }
-.sidebar2 a:hover:not(.active) {
-  background: #9A79E2;
-  color:black;
-}
+
 div.content {
-  margin-left: 400px;
+  margin-left: 200px;
   padding: 1px 16px;
   height: 1000px;
 }
 
 @media screen and (max-width: 700px) {
-  .sidebar1,.sidebar2 {
+  .sidebar1 {
     width: 100%;
     height: auto;
     position: relative;
   }
   .sidebar1 a {float: left;}
-  .sidebar2 a {float: left;}
   div.content {margin-left: 0;}
 }
 
 @media screen and (max-width: 400px) {
-  .sidebar1 a,.sidebar2 a {
+  .sidebar1 a {
     text-align: center;
     float: none;
   }
@@ -79,29 +110,49 @@ div.content {
 <body>
 
   <div class="sidebar1">
-    <p><center>Main menu</center></p>
-    <a href="{{ url_for('statistic')}}">Student Engagement</a>
-    <a href="{{ url_for('permission')}}">Permission Management</a>
-    <a href="{{ url_for('account')}}">Account</a>
-    <a href="{{ url_for('logout')}}">Log Out</a>
+   <p><center>Main menu</center></p>
+  <a href="{{ url_for('statistic')}}">Student Engagement</a>
+  <a href="{{ url_for('permission')}}">Permission Management</a>
+  <a href="{{ url_for('account')}}">Account</a>
+  <a href="{{ url_for('admin')}}">Admin</a>
+  <a href="{{ url_for('landing')}}">Landing</a>
+  <a href="{{ url_for('logout')}}">Log Out</a>
   </div>
-<div class="sidebar2">
-  <p><center>User Permissions</center></p>
-  {% for user in users %}
-    <a href="{{ url_for('permission', username=user.username) }}">{{ user.username }}</a>
-  {% endfor %}
-</div>
 
 <div class="content">
-  {% if username %}
-  <h2>{{ username }}</h2>
-  <form action="{{ url_for('update_permission', username=username) }}" method="post">
-    <h3>Manage Permissions:</h3>
-    <input type="checkbox" name="manage_users" {% if 'manage_users' in user_permissions %}checked{% endif %}> Manage Users<br>
-    <input type="checkbox" name="manage_permissions" {% if 'manage_permissions' in user_permissions %}checked{% endif %}> Manage Permissions<br>
-    <input type="checkbox" name="manage_pages"{% if 'manage_pages' in user_permissions %}checked{% endif %}> Manage Pages<br>
-    <input type="checkbox" name="manage_data"{% if 'manage_data' in user_permissions %}checked{% endif %}> Manage Data<br>
-    <button type="submit">Save Changes</button>
+  <h1>Permission</h1>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <form method="post">
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>User Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for username, user_type in users %}
+          <tr>
+            <td>{{ username }}</td>
+            <td>
+              <select name="{{ username }}">
+                <option value="student" {% if user_type == 'student' %}selected{% endif %}>Student</option>
+                <option value="admin" {% if user_type == 'admin' %}selected{% endif %}>Admin</option>
+              </select>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit" class="button1">Update </button>
   </form>
-{% endif %}
 </div>

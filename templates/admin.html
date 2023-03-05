@@ -4,8 +4,54 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body {
-  margin: 0;
-  font-family: "Lato", sans-serif;
+	font-family: "Lucida Console", "Courier New", monospace;
+	font-style: normal;
+	font-weight: 400;
+	background: #FFFFFF;
+}
+
+
+h1{
+  width: 100%;
+  padding: 6px 20px;
+  margin: 8px 0;
+  display: block;
+  box-sizing: border-box;
+  font-size: 30px
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+   font-size: 20px
+
+}
+
+select{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: block;
+  box-sizing: border-box;
+
+}
+.button1{
+  background-color:#BAE6FF;
+  border: none;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  color: black;
+  border: 2px solid #008CBA;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  display: inline-block;
 }
 
 .sidebar1 {
@@ -19,26 +65,15 @@ body {
   border-radius: 37px;
   background: #BAE6FF;
 }
-.sidebar2 {
-  margin-top:85px;
-  width: 200px;
-  position: fixed;
-  height: 90%;
-  overflow: auto;
-  display: inline-block;
-  white-space: normal;
-  border-radius: 37px;
-  background: #AA83FD;
-  margin-left: 200px
-}
-.sidebar1 a,.sidebar2 a {
+
+.sidebar1 a {
   display: block;
   color: black;
   padding: 16px;
   text-decoration: none;
 }
 
-.sidebar1 a.active, .sidebar2 a.active{
+.sidebar1 a.active{
   background-color:white;
   color: black;
 }
@@ -47,29 +82,25 @@ body {
   background: #9FDAFB;
   color:black;
 }
-.sidebar2 a:hover:not(.active) {
-  background: #9A79E2;
-  color:black;
-}
+
 div.content {
-  margin-left: 400px;
+  margin-left: 200px;
   padding: 1px 16px;
   height: 1000px;
 }
 
 @media screen and (max-width: 700px) {
-  .sidebar1,.sidebar2 {
+  .sidebar1 {
     width: 100%;
     height: auto;
     position: relative;
   }
   .sidebar1 a {float: left;}
-  .sidebar2 a {float: left;}
   div.content {margin-left: 0;}
 }
 
 @media screen and (max-width: 400px) {
-  .sidebar1 a,.sidebar2 a {
+  .sidebar1 a {
     text-align: center;
     float: none;
   }
@@ -79,11 +110,14 @@ div.content {
 <body>
 
 <div class="sidebar1">
-  <p><center>Main menu</center></p>
+    <p><center>Main menu</center></p>
   <a href="{{ url_for('statistic')}}">Student Engagement</a>
+  <a href="{{ url_for('permission')}}">Permission Management</a>
   <a href="{{ url_for('account')}}">Account</a>
+  <a href="{{ url_for('admin')}}">Admin</a>
+  <a href="{{ url_for('landing')}}">Landing</a>
   <a href="{{ url_for('logout')}}">Log Out</a>
-    <a href="{{ url_for('admin')}}">Admin</a>
+
 
 </div>
 <div class="sidebar2">
@@ -105,8 +139,62 @@ div.content {
       </ul>
     {% endif %}
   {% endwith %}
+  <h2>Add User Profile</h2>
+  <form method="POST" action="">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    <label for="password">Password:</label>
+    <input type="text" id="password" name="password" required>
+    <label for="user_type">User Type:</label>
+    <input type="text" id="user_type" name="user_type" required>
+    <label for="degree">Degree:</label>
+    <input type="text" id="degree" name="degree" required>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <input type="submit" name="add_user" value="Add User">
 
-  <h2>Delete User Profile</h2>
+  </form>
+    <h2>Add Statistics</h2>
+  <form method="POST" action="">
+      <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+      <table>
+  <thead>
+    <tr>
+      <th>Module Name</th>
+      <th>Quiz Scores</th>
+      <th>Tutor Engagement Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Software Development Life Cycle</td>
+      <td>    <input type="text" id="sdlc_quiz_pct" name="sdlc_quiz_pct" required></td>
+      <td><input type="text" id="sdlc_tutor_score" name="sdlc_tutor_score" required></td>
+    </tr>
+    <tr>
+      <td>Applied Mathematics</td>
+      <td><input type="text" id="applied_maths_quiz_pct" name="applied_maths_quiz_pct" required></td>
+      <td><input type="text" id="applied_maths_tutor_score" name="applied_maths_tutor_score" required></td>
+    </tr>
+    <tr>
+      <td>Systems and Software Design</td>
+      <td><input type="text" id="ssd_quiz_pct" name="ssd_quiz_pct" required></td>
+      <td><input type="text" id="ssd_tutor_score" name="ssd_tutor_score" required></td>
+    </tr>
+    <tr>
+      <td>Internet of Things</td>
+      <td><input type="text" id="iot_quiz_pct" name="iot_quiz_pct" required></td>
+      <td><input type="text" id="iot_tutor_score" name="iot_tutor_score" required></td>
+    </tr>
+  </tbody>
+</table>
+
+    <label for="attendance">Attendance:</label>
+    <input type="text" id="attendance" name="attendance" required>
+    <input type="submit" name="add_statistics" value="add_statistics">
+  </form>
+  <h2>Delete User Profile and Statistic</h2>
   <form method="POST" action="">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>
@@ -151,7 +239,7 @@ div.content {
 
     <label for="attendance">Attendance:</label>
     <input type="text" id="attendance" name="attendance" required>
-    <input type="submit" name="update" value="Update">
+    <input type="submit" name="update_statistics" value="update_statistics">
   </form>
 </div>
 

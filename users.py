@@ -24,6 +24,7 @@ class Users:
         conn.close()
         return users
 
+    @staticmethod
     def get_student_by_username(username):
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
@@ -35,5 +36,16 @@ class Users:
         conn.close()
         return user
 
-    def is_admin(self):
-        return self.role == 'admin'
+    @staticmethod
+    def get_user_type(username):
+        con = sqlite3.connect('database.db')
+        cur = con.cursor()
+        query = f"SELECT user_type FROM users WHERE username = '{username}'"
+        cur.execute(query)
+        result = cur.fetchone()
+        con.close()
+
+        if result:
+            return result[0]
+        else:
+            return None

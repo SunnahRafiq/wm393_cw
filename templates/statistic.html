@@ -1,12 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body {
-  margin: 0;
-  font-family: "Lato", sans-serif;
+	font-family: "Lucida Console", "Courier New", monospace;
+	font-style: normal;
+	font-weight: 400;
+	background: #FFFFFF;
 }
+
+
+h1{
+  width: 100%;
+  padding: 6px 20px;
+  margin: 8px 0;
+  display: block;
+  box-sizing: border-box;
+  font-size: 30px
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+   font-size: 20px
+
+}
+
+select{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: block;
+  box-sizing: border-box;
+
+}
+.button1{
+  background-color:#BAE6FF;
+  border: none;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  color: black;
+  border: 2px solid #008CBA;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+
+
+div.content {
+  margin-left: 400px;
+  padding: 1px 16px;
+  height: 1000px;
+}
+
 
 .sidebar1 {
   margin: 0;
@@ -51,11 +107,6 @@ body {
   background: #9A79E2;
   color:black;
 }
-div.content {
-  margin-left: 400px;
-  padding: 1px 16px;
-  height: 1000px;
-}
 
 @media screen and (max-width: 700px) {
   .sidebar1,.sidebar2 {
@@ -74,27 +125,40 @@ div.content {
     float: none;
   }
 }
+h3 {
+  color: red;
+}
+
 </style>
 </head>
 <body>
 
 <div class="sidebar1">
-  <p><center>Main menu</center></p>
+    <p><center>Main menu</center></p>
   <a href="{{ url_for('statistic')}}">Student Engagement</a>
+  <a href="{{ url_for('permission')}}">Permission Management</a>
   <a href="{{ url_for('account')}}">Account</a>
+  <a href="{{ url_for('admin')}}">Admin</a>
+  <a href="{{ url_for('landing')}}">Landing</a>
   <a href="{{ url_for('logout')}}">Log Out</a>
 </div>
 <div class="sidebar2">
   <p><center>Main menu</center></p>
   {% for student in students %}
-        <a href="{{ url_for('statistic',username=student.username)}}">{{ student.username }}</a>
-    {% endfor %}
+    {% if user_type == 'student' and student.username != user.username %}
+      <a href="#" class="disabled"><i class="fas fa-lock"></i> {{ student.username }}</a>
+    {% else %}
+      <a href="{{ url_for('statistic', username=student.username) }}"><i class="fas fa-user"></i> {{ student.username }}</a>
+    {% endif %}
+  {% endfor %}
 </div>
 
+
 <div class="content">
- <h1>Attendance</h1>
-  <p>Your Average attendance is for the year is:{{ user.attendance }}%</p>
-  <h1>Quiz Submissions</h1>
+ <h1>Student Engagement</h1>
+ <h2>Attendance</h2>
+  <p class="attendance">Your Average attendance is for the year is:{{ user.attendance }}%</p>
+  <h3>{{ user.attendance }}% </h3>
   <p> Quizzes are set by module tutors to help guide self assessment and give feedback. The average result for your quizzes are:</p>
   <h2>Quiz Submissions</h2>
     <table>
@@ -130,8 +194,7 @@ div.content {
             {% endfor %}
         </tbody>
     </table>
-  <h1>Tutor Engagement Scores</h1>
-  <p>Your Average attendance is for the year is:</p>
+
 </div>
 
 </body>

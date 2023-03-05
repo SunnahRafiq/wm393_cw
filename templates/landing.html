@@ -54,9 +54,16 @@ h2,p{
 <a href="{{ url_for('statistic')}}"><button class="button1">Student Engagement</button></a>
 <a href="{{ url_for('account')}}"><button class="button1">Account</button></a>
 <a href="{{ url_for('logout')}}"><button class="button1">Logout</button></a>
+{% if user == 'admin' %}
 <a href="{{ url_for('admin')}}"><button class="button1">Admin</button></a>
-
-
+{% else %}
+<a href="#"><button class="button1" style="background-color: grey;" disabled>Admin</button></a>
+{% endif %}
+{% if user == 'admin' %}
+<a href="{{ url_for('permission')}}"><button class="button1">Permission Management</button></a>
+{% else %}
+<a href="#"><button class="button1" style="background-color: grey;" disabled>Permission Management</button></a>
+{% endif %}
 
 </body>
 </html>
