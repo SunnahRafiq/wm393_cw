@@ -24,12 +24,19 @@ table {
   width: 100%;
 }
 
-td, th {
+ th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
    font-size: 20px
 
+}
+td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+  font-size: 20px;
+  background-color: #BAE6FF; /* Use the same color as the button */
 }
 
 select{
@@ -41,83 +48,28 @@ select{
 
 }
 .button1{
-  background-color:#BAE6FF;
+  background-color: #008CBA; /* Use a darker shade of blue */
   border: none;
   padding: 15px 32px;
   text-align: center;
   text-decoration: none;
   color: black;
-  border: 2px solid #008CBA;
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
   display: inline-block;
 }
 
-.sidebar1 {
-  margin: 0;
-  width: 200px;
-  position: fixed;
-  height: 100%;
-  overflow: auto;
-  display: inline-block;
-  white-space: normal;
-  border-radius: 37px;
-  background: #BAE6FF;
-}
-
-.sidebar1 a {
-  display: block;
-  color: black;
-  padding: 16px;
-  text-decoration: none;
-}
-
-.sidebar1 a.active{
-  background-color:white;
-  color: black;
-}
-
-.sidebar1 a:hover:not(.active) {
-  background: #9FDAFB;
-  color:black;
-}
 
 div.content {
-  margin-left: 200px;
-  padding: 1px 16px;
+  padding: 10px 16px;
   height: 1000px;
-}
 
-@media screen and (max-width: 700px) {
-  .sidebar1 {
-    width: 100%;
-    height: auto;
-    position: relative;
-  }
-  .sidebar1 a {float: left;}
-  div.content {margin-left: 0;}
-}
-
-@media screen and (max-width: 400px) {
-  .sidebar1 a {
-    text-align: center;
-    float: none;
-  }
-}
 </style>
 </head>
 <body>
 
-  <div class="sidebar1">
-   <p><center>Main menu</center></p>
-  <a href="{{ url_for('statistic')}}">Student Engagement</a>
-  <a href="{{ url_for('permission')}}">Permission Management</a>
-  <a href="{{ url_for('account')}}">Account</a>
-  <a href="{{ url_for('admin')}}">Admin</a>
-  <a href="{{ url_for('landing')}}">Landing</a>
-  <a href="{{ url_for('logout')}}">Log Out</a>
-  </div>
+
 
 <div class="content">
   <h1>Permission</h1>
@@ -153,6 +105,8 @@ div.content {
         {% endfor %}
       </tbody>
     </table>
-    <button type="submit" class="button1">Update </button>
+    <button type="submit" class="button1" style="">Update </button>
+    <a class="button1" href="{{ url_for('landing')}}">Landing</a>
   </form>
 </div>
+

@@ -1,5 +1,5 @@
+
 from flask import Flask, render_template, request, redirect, url_for, flash, session,g
-import sqlite3
 from users import Users
 from mystat import Statistic
 from admin import Admin
@@ -7,38 +7,40 @@ from admin import Admin
 app = Flask(__name__)
 app.secret_key = 'secret'
 from functools import wraps
-from flask import session, redirect, url_for
 
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'username' not in session:
+        if 'username' in session:
+            return f(*args, **kwargs)
+        else:
             return redirect(url_for('login'))
-        return f(*args, **kwargs)
     return decorated_function
 
+from flask import Flask, render_template, request, redirect, url_for, session
+import sqlite3
 
-@app.route('/', methods=['POST', 'GET'])
+app = Flask(__name__)
+app.secret_key = 'some_secret_key'
+
+@app.route('/', methods=['GET', 'POST'])
 def login():
-    if request.method=='POST':
+    if request.method == 'POST':
         con = sqlite3.connect("database.db")
         cur = con.cursor()
-        name=request.form['uname']
-        password=request.form['psw']
-        query="SELECT username,password FROM users where username ='"+name+"' and password='"+password+"'"
-        cur.execute(query)
-        results=cur.fetchall()
-        if len(results)==0:
-            print('SORRY INCORRECT CREDENTIALS TRY AGAIN')
+        name = request.form['uname']
+        password = request.form['psw']
+        query = "SELECT username,password FROM users where username = ? and password = ?"
+        cur.execute(query, (name, password))
+        results = cur.fetchall()
+        if len(results) == 0:
+            error_message = "Incorrect username or password. Please try again."
+            return render_template('login.html', error_message=error_message)
         else:
-            session['username'] = name  # Store the username in the session object
+            session['username'] = name
             return redirect(url_for('landing'))
     return render_template('login.html')
 
-
-@app.route("/register")
-def register():
-    return render_template('register.html')
 
 
 @app.route('/landing')
@@ -48,31 +50,39 @@ def landing():
         return redirect(url_for('login'))
     username = session['username']
     user = Users.get_user_type(username)
-    return render_template('landing.html', user=user)
+    return render_template('landing.html', user=user,username=username)
 
 
 @app.route('/statistic')
 @app.route('/statistic/<username>')
 @login_required
+
 def statistic(username=None):
     if username is None:
         if 'username' not in session:
             return redirect(url_for('login'))
         username = session['username']
     students = Users.get_user()
-    user_type=Users.get_user_type(username)
+    degrees = list(set([student.degree for student in students]))
+    years = list(set([student.year for student in students]))
+    if request.args.get('degree'):
+        filtered_students = [student for student in students if student.degree == request.args.get('degree')]
+    else:
+        filtered_students = students
+    if request.args.get('year'):
+        filtered_students = [student for student in filtered_students if str(student.year) == request.args.get('year')]
     attendance, quiz_submissions, tutor_engagement = Statistic.get_statistic(username)
-    user = Users(username, None, 'student', None, None)
+    user = Users(username, None, 'student', None, None,None)
     user.attendance = attendance
     user.quiz_submissions = quiz_submissions
     user.tutor_engagement = tutor_engagement
-    return render_template('statistic.html', students=students, user=user,user_type=user_type)
 
-
+    return render_template('statistic.html', students=students, filtered_students=filtered_students, degrees=degrees, years=years, user=user)
 
 
 
 @app.route('/logout')
+@login_required
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
@@ -80,6 +90,7 @@ def logout():
 
 @app.route('/admin', methods=['POST', 'GET'])
 @login_required
+
 def admin():
     if 'username' not in session:
         return redirect(url_for('login'))
@@ -91,12 +102,9 @@ def admin():
             user_type = request.form.get('user_type')
             degree = request.form.get('degree')
             name = request.form.get('name')
-            admin.add_user(username, password,user_type,degree,name)
+            year = request.form.get('year')
+            admin.add_user(username, password, user_type, degree, name,year)
             flash('User added successfully!')
-        elif request.form.get('delete_user'):
-            username = request.form.get('username')
-            admin.delete_user(username)
-            flash('User profile deleted successfully!')
         elif request.form.get('delete'):
             username = request.form.get('username')
             admin.delete_user(username)
@@ -132,6 +140,7 @@ def admin():
 
 @app.route('/permission', methods=['GET', 'POST'])
 @login_required
+
 def permission():
     if 'username' not in session:
         return redirect(url_for('login'))

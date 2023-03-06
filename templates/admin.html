@@ -110,14 +110,13 @@ div.content {
 <body>
 
 <div class="sidebar1">
-    <p><center>Main menu</center></p>
+  <p><center>Main menu</center></p>
   <a href="{{ url_for('statistic')}}">Student Engagement</a>
-  <a href="{{ url_for('permission')}}">Permission Management</a>
   <a href="{{ url_for('account')}}">Account</a>
-  <a href="{{ url_for('admin')}}">Admin</a>
   <a href="{{ url_for('landing')}}">Landing</a>
   <a href="{{ url_for('logout')}}">Log Out</a>
-
+  <a href="{{ url_for('admin')}}">Admin</a>
+  <a href="{{ url_for('permission')}}">Permission Management</a>
 
 </div>
 <div class="sidebar2">
@@ -139,19 +138,39 @@ div.content {
       </ul>
     {% endif %}
   {% endwith %}
-  <h2>Add User Profile</h2>
+<h2>Add User Profile</h2>
+<table>
   <form method="POST" action="">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
-    <label for="password">Password:</label>
-    <input type="text" id="password" name="password" required>
-    <label for="user_type">User Type:</label>
-    <input type="text" id="user_type" name="user_type" required>
-    <label for="degree">Degree:</label>
-    <input type="text" id="degree" name="degree" required>
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
-    <input type="submit" name="add_user" value="Add User">
+    <tr>
+      <td><label for="username">Username:</label></td>
+      <td><input type="text" id="username" name="username" required></td>
+    </tr>
+    <tr>
+      <td><label for="password">Password:</label></td>
+      <td><input type="text" id="password" name="password" required></td>
+    </tr>
+    <tr>
+      <td><label for="user_type">User Type:</label></td>
+      <td><input type="text" id="user_type" name="user_type" required></td>
+    </tr>
+    <tr>
+      <td><label for="degree">Degree:</label></td>
+      <td><input type="text" id="degree" name="degree" required></td>
+    </tr>
+    <tr>
+      <td><label for="name">Name:</label></td>
+      <td><input type="text" id="name" name="name" required></td>
+    </tr>
+    <tr>
+      <td><label for="year">Year:</label></td>
+      <td><input type="text" id="year" name="Year" required></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align:center;"><input class="button1" type="submit" name="add_user" value="Add User"></td>
+    </tr>
+  </form>
+</table>
+
 
   </form>
     <h2>Add Statistics</h2>
@@ -192,13 +211,13 @@ div.content {
 
     <label for="attendance">Attendance:</label>
     <input type="text" id="attendance" name="attendance" required>
-    <input type="submit" name="add_statistics" value="add_statistics">
+    <input class="button1" type="submit" name="add_statistics" value="Add">
   </form>
   <h2>Delete User Profile and Statistic</h2>
   <form method="POST" action="">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>
-    <input type="submit" name="delete" value="Delete">
+    <input class="button1" type="submit" name="delete" value="Delete">
   </form>
 
   <h2>Update Statistics</h2>
@@ -239,7 +258,7 @@ div.content {
 
     <label for="attendance">Attendance:</label>
     <input type="text" id="attendance" name="attendance" required>
-    <input type="submit" name="update_statistics" value="update_statistics">
+    <input class="button1" type="submit" name="update_statistics" value="Update">
   </form>
 </div>
 

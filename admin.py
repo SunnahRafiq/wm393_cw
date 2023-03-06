@@ -39,8 +39,8 @@ class Admin:
             self.con.commit()
             return 'Statistics updated successfully!'
 
-    def add_user(self, username, password,user_type,degree,name):
-        self.cur.execute("INSERT INTO users (username, password,user_type,degree,name) VALUES (?, ?,?,?,?)", (username, password,user_type,degree,name))
+    def add_user(self, username, password,user_type,degree,name,year):
+        self.cur.execute("INSERT INTO users (username, password,user_type,degree,name,year) VALUES (?, ?,?,?,?,?)", (username, password,user_type,degree,name,year))
         self.con.commit()
 
 

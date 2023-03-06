@@ -11,15 +11,15 @@ body {
 	background: #FFFFFF;
 }
 
-
-h1{
+h1 {
   width: 100%;
   padding: 6px 20px;
   margin: 8px 0;
   display: block;
   box-sizing: border-box;
-  font-size: 30px
+  font-size: 30px;
 }
+
 table {
   border-collapse: collapse;
   width: 100%;
@@ -29,40 +29,53 @@ td, th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
-   font-size: 20px
-
+  font-size:15px;
 }
 
-select{
+select {
   width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
+  padding: 10px;
+  margin: 4px 0;
   display: block;
   box-sizing: border-box;
-
+  border-radius: 15px;
+  border: 2px solid #008CBA;
+  font-size: 16px;
+  background-color: #E7F2F8;
 }
-.button1{
-  background-color:#BAE6FF;
+
+input[type=text] {
+  width: 100%;
+  padding: 10px;
+  margin: 4px 0;
+  display: block;
+  box-sizing: border-box;
+  border-radius: 15px;
+  border: 2px solid #008CBA;
+  font-size: 16px;
+  background-color: #E7F2F8;
+}
+
+.button1 {
+  background-color: #BAE6FF;
   border: none;
-  padding: 15px 32px;
+  padding: 10px 20px;
   text-align: center;
   text-decoration: none;
   color: black;
   border: 2px solid #008CBA;
   font-size: 16px;
-  margin: 4px 2px;
+  margin: 4px 0;
   cursor: pointer;
-  display: inline-block;
+  display: block;
+  border-radius: 15px;
 }
 
-
-
 div.content {
-  margin-left: 400px;
+  margin-left: 500px;
   padding: 1px 16px;
   height: 1000px;
 }
-
 
 .sidebar1 {
   margin: 0;
@@ -75,8 +88,9 @@ div.content {
   border-radius: 37px;
   background: #BAE6FF;
 }
+
 .sidebar2 {
-  margin-top:85px;
+  margin-top: 85px;
   width: 200px;
   position: fixed;
   height: 90%;
@@ -85,9 +99,11 @@ div.content {
   white-space: normal;
   border-radius: 37px;
   background: #AA83FD;
-  margin-left: 200px
+  margin-left: 200px;
+  padding: 20px;
 }
-.sidebar1 a,.sidebar2 a {
+
+.sidebar1 a, .sidebar2 a {
   display: block;
   color: black;
   padding: 16px;
@@ -103,13 +119,14 @@ div.content {
   background: #9FDAFB;
   color:black;
 }
+
 .sidebar2 a:hover:not(.active) {
   background: #9A79E2;
   color:black;
 }
 
 @media screen and (max-width: 700px) {
-  .sidebar1,.sidebar2 {
+  .sidebar1, .sidebar2 {
     width: 100%;
     height: auto;
     position: relative;
@@ -126,7 +143,7 @@ div.content {
   }
 }
 h3 {
-  color: red;
+  color: #369FDA;
 }
 
 </style>
@@ -134,17 +151,57 @@ h3 {
 <body>
 
 <div class="sidebar1">
-    <p><center>Main menu</center></p>
+  <p><center>Main menu</center></p>
   <a href="{{ url_for('statistic')}}">Student Engagement</a>
-  <a href="{{ url_for('permission')}}">Permission Management</a>
   <a href="{{ url_for('account')}}">Account</a>
-  <a href="{{ url_for('admin')}}">Admin</a>
   <a href="{{ url_for('landing')}}">Landing</a>
   <a href="{{ url_for('logout')}}">Log Out</a>
+  {% if user == 'admin' %}
+  <a href="{{ url_for('admin')}}"><button class="button1">Admin</button></a>
+  {% else %}
+  <a href="#"><button  style="background-color: grey;" disabled>Admin</button></a>
+  {% endif %}
+  {% if user == 'admin' %}
+  <a href="{{ url_for('permission')}}"><button class="button1">Permission Management</button></a>
+  {% else %}
+  <a href="#"><button  style="background-color: grey;" disabled>Permission Management</button></a>
+  {% endif %}
 </div>
 <div class="sidebar2">
   <p><center>Main menu</center></p>
-  {% for student in students %}
+
+  <form action="{{ url_for('statistic') }}" method="get">
+    <input type="text" name="search" placeholder="Search..." value="{{ search }}">
+    <button type="submit" class="button1" style="font-size: 12px;
+  padding: 5px 10px;"><i class="fa fa-search"></i></button>
+  </form>
+  <hr>
+  <button type="button" onclick="toggleFilterSection()" class="button1" style="font-size: 12px; padding: 5px 10px;">Filter</button>
+  <div id="filter-container" style="display: none;">
+    <p><center>Filter by degree</center></p>
+    <form action="{{ url_for('statistic') }}" method="get">
+      <select name="degree">
+        <option value="">All degrees</option>
+        {% for degree in degrees %}
+          <option value="{{ degree }}">{{ degree }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="button1" style="font-size: 12px; padding: 5px 10px;">Filter</button>
+    </form>
+    <hr>
+    <p><center>Filter by year</center></p>
+    <form action="{{ url_for('statistic') }}" method="get">
+      <select name="year">
+        <option value="">All Years</option>
+        {% for year in years %}
+          <option value="{{ year }}">{{ year }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="button1" style="font-size: 12px; padding: 5px 10px;">Filter</button>
+    </form>
+    <hr>
+  </div>
+  {% for student in filtered_students %}
     {% if user_type == 'student' and student.username != user.username %}
       <a href="#" class="disabled"><i class="fas fa-lock"></i> {{ student.username }}</a>
     {% else %}
@@ -153,11 +210,26 @@ h3 {
   {% endfor %}
 </div>
 
+<script>
+function toggleFilterSection() {
+  var filterSection = document.getElementById("filter-container");
+  if (filterSection.style.display === "none") {
+    filterSection.style.display = "block";
+  } else {
+    filterSection.style.display = "none";
+  }
+}
+</script>
+
+</div>
+
+
+
 
 <div class="content">
  <h1>Student Engagement</h1>
  <h2>Attendance</h2>
-  <p class="attendance">Your Average attendance is for the year is:{{ user.attendance }}%</p>
+  <p class="attendance">Your Average attendance is for the year is:</p>
   <h3>{{ user.attendance }}% </h3>
   <p> Quizzes are set by module tutors to help guide self assessment and give feedback. The average result for your quizzes are:</p>
   <h2>Quiz Submissions</h2>
@@ -169,10 +241,10 @@ h3 {
             </tr>
         </thead>
         <tbody>
-            {% for module, percentage in user.quiz_submissions.items() %}
+        <h3>{% for module, percentage in user.quiz_submissions.items() %}</h3>
             <tr>
                 <td>{{ module }}</td>
-                <td>{{ percentage }}%</td>
+                <td><h3>{{ percentage }}%</h3></td>
             </tr>
             {% endfor %}
         </tbody>
@@ -186,10 +258,10 @@ h3 {
             </tr>
         </thead>
         <tbody>
-            {% for module, score in user.tutor_engagement.items() %}
+            <h3>{% for module, score in user.tutor_engagement.items() %}</h3>
             <tr>
                 <td>{{ module }}</td>
-                <td>{{ score }}/10</td>
+                <td><h3>{{ score }}/10</h3></td>
             </tr>
             {% endfor %}
         </tbody>
